@@ -1,5 +1,14 @@
 local M = {}
 
+local defaults = {
+  highlight_styles = {'underline'}
+}
+
+__nvim_cursorline_config = {
+
+
+}
+
 local disabled = 0
 local cursor = 1
 local window = 2
@@ -18,7 +27,9 @@ local cursorline_bg = return_highlight_term("CursorLine", "guibg")
 
 function M.highlight_cursorword()
   if vim.g.cursorword_highlight ~= false then
-    vim.cmd('highlight CursorWord term=underline cterm=underline gui=underline')
+    local styles = __nvim_cursorline_config.highlight_styles or defaults.highlight_styles
+    styles = table.concat(styles, ',')
+    vim.cmd(string.format('highlight CursorWord term=%s cterm=%s gui=%s', styles, styles, styles))
   end
 end
 
@@ -85,6 +96,11 @@ function M.timer_start()
       end
     )
   )
+end
+
+function M.config(opts)
+  opts = opts or {}
+  __nvim_cursorline_config = opts
 end
 
 return M
